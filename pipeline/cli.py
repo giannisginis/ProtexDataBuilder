@@ -56,9 +56,8 @@ def run(
     )
     output_dir_path = ensure_dir(Path(output_dir))
 
-    if blur_detection or dedup_detection:
-        preprocessed_dir = output_dir_path / "proprocessed_frames"
-        preprocessed_dir = ensure_dir(Path(preprocessed_dir))
+    preprocessed_dir = output_dir_path / "proprocessed_frames"
+    preprocessed_dir = ensure_dir(Path(preprocessed_dir))
     coco_output_path = ensure_parent_dir(Path(coco_output))
     report_path = ensure_parent_dir(Path(report_dir))
 

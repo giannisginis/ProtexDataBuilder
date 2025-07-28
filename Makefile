@@ -19,6 +19,9 @@ env-install:
 test:
 	poetry run pytest -v
 
+test-coverage:
+	poetry run pytest --cov=pipeline --cov-report=xml --cov-fail-under=90 --cov-report=html -v
+
 lint-check:
 	poetry run ruff check
 	poetry run black . --check
@@ -38,11 +41,11 @@ build:
 
 docker-run:
 	docker run --rm -t\
-		-v $(PWD)/data/videos:/videos \
+		-v $(PWD)/data/videos:/data/videos \
 		-v $(PWD)/outputs:/outputs \
 		-v $(PWD)/reports:/reports \
 		dataset-pipeline \
-		--video /videos/sample.mp4 \
+		--video /data/videos/timelapse_test.mp4 \
 		--output /outputs/frames \
 		--coco_output /outputs/detections/detections.coco.json \
 		--pretag \

@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import List, Dict, Any
 from pipeline.models.base import BaseModelRunner, DetectionResult
+from transformers import pipeline
 
 
 class HuggingFaceRunner(BaseModelRunner):
@@ -100,8 +101,6 @@ class HuggingFaceRunner(BaseModelRunner):
         Args:
             model_name: HuggingFace model identifier for object detection.
         """
-        from transformers import pipeline
-
         try:
             self.detector = pipeline("object-detection", model=model_name)
         except Exception as e:
