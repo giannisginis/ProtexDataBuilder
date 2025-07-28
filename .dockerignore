@@ -1,0 +1,31 @@
+# .dockerignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.db
+*.sqlite3
+venv/
+.env
+.env.*
+.cache/
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Data & outputs
+/data/
+/output/
+/reports/
+*.mp4
+*.jpg
+*.json
+*.coco.json
+*.ipynb
