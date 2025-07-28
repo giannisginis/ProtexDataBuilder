@@ -1,0 +1,45 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  quality:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Lint check
+        run: make lint-check
+
+      - name: Run tests with coverage
+        run: make test-coverage
+
+      - name: Comment coverage on PR
+        uses: py-cov-action/pytest-coverage-comment@v1
+        with:
+          coverage-file: coverage.xml
+
+      - name: Run diff-cover to enforce coverage on diff
+        run: |
+          git fetch origin master --depth=1  # Ensure master exists for diff
+          poetry run diff-cover coverage.xml --compare-branch=origin/master --fail-under=95
