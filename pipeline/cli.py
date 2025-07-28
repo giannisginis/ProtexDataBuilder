@@ -42,7 +42,9 @@ def run(
     dedub_threshold: int = typer.Option(
         5, help="Hamming distance threshold for duplicates."
     ),
-    report_dir: str = typer.Option("/reports", help="Path to save Markdown report."),
+    report_dir: str = typer.Option(
+        ..., "--reports_output", "-ro", help="Path to save Markdown report."
+    ),
     config: str = typer.Option(None, help="Path to detection model config YAML file."),
     env: str = typer.Option("dev", help="Environment to use (dev/test/prod)"),
 ):
@@ -81,7 +83,7 @@ def run(
     )
     timings.update(extraction_time)
 
-    # Preprocessing (cleaning + dedup)
+    # Preprocessing
     pre = Preprocessor(
         enable_blur_detection=blur_detection,
         enable_deduplication=dedup_detection,
