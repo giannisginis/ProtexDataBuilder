@@ -29,6 +29,13 @@ pre-commit = "^4.2.0"
 black = "^25.1.0"
 types-pyyaml = "^6.0.12.20250516"
 mypy = "^1.17.0"
+pytest = "^8.4.1"
+pytest-cov = "^6.2.1"
+diff-cover = "^9.6.0"
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
 
 [tool.black]
 exclude = '''
