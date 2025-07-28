@@ -31,4 +31,4 @@ RUN poetry config virtualenvs.create false \
 COPY pipeline ./pipeline
 
 # Set entrypoint
-ENTRYPOINT ["python", "-m", "pipeline.cli"]
+ENTRYPOINT ["python3", "-m", "pipeline.cli"]

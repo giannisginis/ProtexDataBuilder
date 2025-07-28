@@ -2,6 +2,7 @@ import json
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, Optional
+from pipeline.core.report.comet_logger import CometLogger
 
 
 def generate_report(
@@ -9,6 +10,7 @@ def generate_report(
     extracted_frame_count: int,
     total_frames: int,
     coco_path: Path,
+    comet_logger: Optional[CometLogger] = None,
     out_path: str = "report.md",
     timings: Optional[Dict] = None,
     cleaned_frames: Optional[int] = None,
@@ -65,3 +67,11 @@ def generate_report(
 
     # Save report
     Path(out_path).write_text("\n".join(report_lines))
+
+    # Log to Comet if available
+    if comet_logger:
+        comet_logger.log_assets(
+            {
+                "pipeline_summary.md": out_path,
+            }
+        )
