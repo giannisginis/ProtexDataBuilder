@@ -8,7 +8,7 @@ def generate_report(
     video_path: str,
     extracted_frame_count: int,
     total_frames: int,
-    coco_path: str,
+    coco_path: Path,
     out_path: str = "report.md",
     timings: Optional[Dict] = None,
     cleaned_frames: Optional[int] = None,

@@ -6,11 +6,30 @@ from typing import Optional
 
 
 def load_config_from_file(path: str) -> dict:
+    """
+    Load a YAML configuration file.
+
+    Args:
+        path (str): Path to the YAML config file.
+
+    Returns:
+        dict: Parsed configuration as a dictionary.
+    """
     with open(path) as f:
         return yaml.safe_load(f)
 
 
 def load_config_from_env(env: Optional[str] = None) -> dict:
+    """
+    Load configuration by merging the base config with an environment-specific override.
+
+    Args:
+        env (Optional[str]): Environment name (e.g., 'dev', 'prod').
+                             If not provided, reads from APP_ENV env var or defaults to 'dev'.
+
+    Returns:
+        dict: Merged configuration dictionary.
+    """
     base_config_path = Path("pipeline/config/base.yaml")
     env = env or os.getenv("APP_ENV", "dev")
     env_config_path = Path(f"pipeline/config/{env}.yaml")
