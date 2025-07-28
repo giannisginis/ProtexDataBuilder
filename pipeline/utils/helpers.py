@@ -2,6 +2,7 @@ import os
 import yaml
 from pathlib import Path
 from deepmerge import always_merger
+from typing import Optional
 
 
 def load_config_from_file(path: str) -> dict:
@@ -9,7 +10,7 @@ def load_config_from_file(path: str) -> dict:
         return yaml.safe_load(f)
 
 
-def load_config_from_env(env: str = None) -> dict:
+def load_config_from_env(env: Optional[str] = None) -> dict:
     base_config_path = Path("pipeline/config/base.yaml")
     env = env or os.getenv("APP_ENV", "dev")
     env_config_path = Path(f"pipeline/config/{env}.yaml")
@@ -25,7 +26,7 @@ def load_config_from_env(env: str = None) -> dict:
         return base
 
 
-def load_config(config_path: str = None, env: str = None) -> dict:
+def load_config(config_path: Optional[str] = None, env: Optional[str] = None) -> dict:
     """
     Load configuration either from a specific file or from environment-based configs.
 
