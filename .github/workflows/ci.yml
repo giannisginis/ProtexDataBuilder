@@ -35,7 +35,7 @@ jobs:
         run: make test-coverage
 
       - name: Comment coverage on PR
-        uses: py-cov/pytest-coverage-comment@v1
+        uses: py-cov/pytest-coverage-comment@main
         with:
           coverage-file: coverage.xml
           github-token: ${{ secrets.GITHUB_TOKEN }}
