@@ -34,13 +34,6 @@ jobs:
       - name: Run tests with coverage
         run: make test-coverage
 
-      - name: Comment coverage on PR
-        uses: py-cov/pytest-coverage-comment@main
-        with:
-          coverage-file: coverage.xml
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          unique-id: coverage
-
       - name: Run diff-cover to enforce coverage on diff
         run: |
           git fetch origin master --depth=1  # Ensure master exists for diff
