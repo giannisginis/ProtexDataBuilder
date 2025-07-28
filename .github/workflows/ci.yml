@@ -35,9 +35,11 @@ jobs:
         run: make test-coverage
 
       - name: Comment coverage on PR
-        uses: py-cov-action/pytest-coverage-comment@v1
+        uses: py-cov/pytest-coverage-comment@v1
         with:
           coverage-file: coverage.xml
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          unique-id: coverage
 
       - name: Run diff-cover to enforce coverage on diff
         run: |
