@@ -1,0 +1,63 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Installer logs
+pip-log.txt
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test and coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Output directories
+outputs/
+reports/
+data/
+
+# Images and videos (optional - if generated)
+*.jpg
+*.jpeg
+*.png
+*.mp4
+*.avi
+
+# Logs
+*.log
+
+# Configuration overrides
+*.local.yaml
+*.env
+.env.*

@@ -1,0 +1,2 @@
+model:
+  path: data/models/yolov8n.pt
