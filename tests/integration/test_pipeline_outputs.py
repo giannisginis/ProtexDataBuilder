@@ -1,38 +1,39 @@
-import subprocess
-import json
+from typer.testing import CliRunner
+from pipeline.cli import app
 from pathlib import Path
+import json
+
+runner = CliRunner()
 
 
-def test_pipeline_outputs(tmp_path: Path):
-    # Paths
-    video_path = "tests/assets/sample.mp4"
+def test_pipeline_outputs(tmp_path: Path, create_test_video):
+    video_path = tmp_path / "sample.mp4"
+    create_test_video(video_path, num_frames=5, width=64, height=64)
+
     frames_dir = tmp_path / "frames"
     coco_path = tmp_path / "annotations.coco.json"
+    reports_dir = tmp_path / "reports"
 
-    # Run CLI pipeline
-    result = subprocess.run(
+    result = runner.invoke(
+        app,
         [
-            "poetry",
-            "run",
-            "python",
-            "-m",
-            "pipeline.cli",
             "--video",
-            video_path,
+            str(video_path),
             "--output",
             str(frames_dir),
             "--coco_output",
             str(coco_path),
             "--reports_output",
-            "reports",
+            str(reports_dir),
             "--pretag",
         ],
-        capture_output=True,
-        text=True,
     )
 
-    # Ensure pipeline ran successfully
-    assert result.returncode == 0, f"Pipeline failed:\n{result.stderr}"
+    # Check it ran correctly
+    assert result.exit_code == 0, (
+        f"CLI failed:\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}\n"
+        f"exception: {result.exception}"
+    )
 
     # Check frames exist
     frames = list(frames_dir.glob("*.jpg"))
