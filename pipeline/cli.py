@@ -1,6 +1,7 @@
 import typer
 import logging
 from pathlib import Path
+import os
 
 from pipeline.validation.validator import validate_video, ValidationError
 from pipeline.core.extract.extractor import extract_frames
@@ -11,6 +12,7 @@ from pipeline.models.yolo import YOLOv8Runner
 from pipeline.utils.helpers import load_config
 from pipeline.utils.paths import ensure_dir
 from pipeline.utils.paths import ensure_parent_dir
+from pipeline.core.report.comet_logger import CometLogger
 
 app = typer.Typer(help="MLOps Dataset Generation CLI")
 
@@ -47,6 +49,13 @@ def run(
     ),
     config: str = typer.Option(None, help="Path to detection model config YAML file."),
     env: str = typer.Option("dev", help="Environment to use (dev/test/prod)"),
+    comet: bool = typer.Option(False, help="Log metrics to Comet-ML."),
+    experiment_name: str = typer.Option(
+        None, help="Optional name for the Comet-ML experiment."
+    ),
+    experiment_key: str = typer.Option(
+        None, help="Optional Comet-ML experiment key (for resuming)."
+    ),
 ):
     """
     Run full pipeline: validate → extract → clean/dedup → detect → report.
@@ -54,12 +63,34 @@ def run(
     logging.basicConfig(
         format="%(asctime)s %(levelname)s:%(message)s", level=logging.INFO
     )
+    typer.secho("Starting dataset generation pipeline...", fg=typer.colors.BRIGHT_CYAN)
+    comet_logger = CometLogger(
+        project_name="protex-ai",
+        workspace="ioannisgkinis",
+        api_key=os.getenv("COMET_API_KEY"),
+        experiment_name=experiment_name,
+        experiment_key=experiment_key,
+        disabled=not comet,
+        tags=["dataset-pipeline", env],
+        notes="Run from CLI with Comet enabled",
+    )
+
     output_dir_path = ensure_dir(Path(output_dir))
 
     preprocessed_dir = output_dir_path / "proprocessed_frames"
     preprocessed_dir = ensure_dir(Path(preprocessed_dir))
     coco_output_path = ensure_parent_dir(Path(coco_output))
     report_path = ensure_dir(Path(report_dir))
+
+    comet_logger.log_params(
+        {
+            "config/video": video,
+            "config/skip": str(skip),
+            "config/blur_detection": str(blur_detection),
+            "config/edup_detection": str(dedup_detection),
+            "env": env,
+        }
+    )
 
     try:
         cap, metadata = validate_video(video)
@@ -137,8 +168,22 @@ def run(
         timings=timings,
         cleaned_frames=pre.cleaned,
         deduped_frames=pre.deduped,
+        comet_logger=comet_logger,
     )
     typer.secho(f"✅ Report saved to {report_path}", fg=typer.colors.GREEN)
+
+    comet_logger.log_metrics(
+        {
+            "frames/frames_extracted": extracted_count,
+            "frames/blurry_removed": pre.cleaned,
+            "frames/duplicates_removed": pre.deduped,
+            "detection/total_detections": ann_count if pretag else 0,
+            **{f"timing/{k}": v for k, v in timings.items()},
+        }
+    )
+
+    comet_logger.end()
+    typer.secho("Pipeline completed successfully!", fg=typer.colors.GREEN)
 
 
 if __name__ == "__main__":

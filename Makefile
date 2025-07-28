@@ -1,20 +1,24 @@
 # Makefile
 
-.PHONY: help clean build test lint docker-run precommit
+.PHONY: help clean build test lint docker-run precommit precommit-install
 
 help:
 	@echo "Usage:"
 	@echo "  make build          - Build Docker image"
-	@echo "  env-install         - Installs dependencies using Poetry"
+	@echo "  make env-install         - Installs dependencies using Poetry"
 	@echo "  make test           - Run unit tests"
+	@echo "  make test-coverage  - Run tests with coverage report"
 	@echo "  make lint-check     - Run ruff/black formatting checks"
 	@echo "  make lint-fix       - Run ruff/black formatting fixes"
 	@echo "  make clean          - Remove build artifacts and output"
 	@echo "  make docker-run     - Run pipeline locally in Docker (CPU only)"
 	@echo "  make precommit      - Run all pre-commit hooks"
+	@echo "  make run            - Run the pipeline with default parameters"
+	@echo "  make run-comet      - Run the pipeline with Comet-ML logging"
 
 env-install:
 	poetry install
+	poetry run pre-commit install
 
 test:
 	poetry run pytest -v
@@ -34,7 +38,7 @@ precommit:
 	poetry run pre-commit run --all-files
 
 clean:
-	rm -rf .pytest_cache __pycache__ .mypy_cache dist .ruff_cache outputs/* *.egg-info
+	rm -rf .pytest_cache __pycache__ .mypy_cache dist .ruff_cache outputs/* *.egg-info .coverage htmlcov
 
 build:
 	docker build -t dataset-pipeline .
@@ -48,6 +52,27 @@ docker-run:
 		--video /data/videos/timelapse_test.mp4 \
 		--output /outputs/frames \
 		--coco_output /outputs/detections/detections.coco.json \
+		--reports_output /reports \
 		--pretag \
 		--blur-detection \
   		--dedup-detection
+
+run:
+	poetry run python -m pipeline.cli --video data/videos/timelapse_test.mp4 \
+		--output outputs/frames \
+		--coco_output outputs/annotations.coco.json \
+		--reports_output reports \
+		--pretag \
+		--blur-detection \
+  		--dedup-detection
+
+run-comet:
+	poetry run python -m pipeline.cli --video data/videos/timelapse_test.mp4 \
+		--output outputs/frames \
+		--coco_output outputs/annotations.coco.json \
+		--reports_output reports \
+		--pretag \
+		--blur-detection \
+  		--dedup-detection \
+		--comet \
+		--experiment-name dataset-generation
