@@ -56,13 +56,41 @@ def run(
     experiment_key: str = typer.Option(
         None, help="Optional Comet-ML experiment key (for resuming)."
     ),
+    dry_run: bool = typer.Option(
+        False, help="Preview pipeline steps without executing."
+    ),
 ):
     """
-    Run full pipeline: validate → extract → clean/dedup → detect → report.
+    Run the full dataset generation pipeline step-by-step:
+
+    1. Validate the input video file.
+    2. Extract frames from the timelapse video.
+    3. Optionally filter out blurry and/or duplicate frames.
+    4. Run object detection on the remaining frames and generate COCO annotations.
+    5. Generate a summary report with statistics and visualizations.
+
+    Use optional flags to customize model version, enable/disable steps, log metrics to Comet, or preview steps with --dry-run.
     """
     logging.basicConfig(
         format="%(asctime)s %(levelname)s:%(message)s", level=logging.INFO
     )
+    if dry_run:
+        typer.echo("🔍 DRY-RUN MODE ENABLED")
+        typer.echo("The pipeline will NOT execute. Showing configuration preview:\n")
+        typer.echo(f"Video: {video}")
+        typer.echo(f"Output Dir: {output_dir}")
+        typer.echo(f"COCO Output: {coco_output}")
+        typer.echo(f"Report Dir: {report_dir}")
+        typer.echo(f"Pretag: {pretag}")
+        typer.echo(f"Skip: {skip}")
+        typer.echo(f"Blur Detection: {blur_detection} (Threshold: {clean_threshold})")
+        typer.echo(
+            f"Deduplication: {dedup_detection} (Hash Size: {hash_size}, Threshold: {dedub_threshold})"
+        )
+        typer.echo(f"Config Path: {config or 'default'}")
+        typer.echo(f"Environment: {env}")
+        raise typer.Exit()
+
     typer.secho("Starting dataset generation pipeline...", fg=typer.colors.BRIGHT_CYAN)
     comet_logger = CometLogger(
         project_name="protex-ai",
