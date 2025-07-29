@@ -1,23 +1,55 @@
-## Cloud-Readiness Evaluation
+## Protex DataBuilder — Pipeline Report
 
-This pipeline was designed with cloud deployment across multiple client sites in mind. Here's how it aligns with key requirements:
+## 🧩 Pipeline Summary
 
-### ✅ Reliability
+This pipeline processes timelapse videos into high-quality, pre-tagged image datasets suitable for training computer vision models. The CLI tool performs the following steps:
 
-- All components are modular and tested in isolation (frame extraction, deduplication, detection).
-- Logging and validation are included at every stage (e.g., unreadable frames, blur detection).
-- Dockerized for reproducibility and consistent behavior across environments.
+- **Validation:** Checks video integrity and metadata.
+- **Frame Extraction:** Extracts frames at user-defined intervals.
+- **Preprocessing:**
 
-### ✅ Modularity
+  - Blur detection using Laplacian variance.
+  - Deduplication using perceptual hashing.
 
-- Each stage is implemented as a standalone module and callable via a unified CLI.
-- Configuration is handled via YAML, allowing dynamic control over detection models and thresholds.
-- The `Preprocessor` class encapsulates cleaning and deduplication logic, enabling future extension.
+- **Detection (Optional):** Uses YOLOv8 to tag objects in frames.
+- **Annotation:** Generates COCO-format JSON with image metadata and bounding boxes.
+- **Reporting:** Produces a Markdown summary with stats and timing breakdowns.
+- **Metrics:** Logs observability metrics (frame counts, detection stats, timing) to Comet-ML.
 
-### ✅ Cost Awareness
+## 📊 Dataset Statistics & Observability Metrics
 
-- Blurry and duplicate frames are filtered early to reduce unnecessary inference.
-- Frame skipping is configurable via `--skip`, saving both compute and storage.
-- Time metrics for each stage are logged and reported, allowing cost/performance tradeoffs.
+- **Input video:** `data/videos/timelapse_test.mp4`
+- **Total frames in video:** 4077
+- **Frames extracted:** 4077
+- **Frame drop ratio:** 0.00%
+- **Blurry frames removed:** 0
+- **Duplicate frames removed:** 3793
+- **Final images pre-tagged:** 284
+- **Total detections:** 122
 
-This design enables efficient scaling of dataset generation jobs across multiple sites while keeping costs and operational risks under control.
+### Class Distribution:
+
+| Class      | Count |
+| ---------- | ----- |
+| car        | 80    |
+| bus        | 10    |
+| truck      | 10    |
+| person     | 9     |
+| tv         | 5     |
+| boat       | 3     |
+| laptop     | 2     |
+| train      | 2     |
+| cell phone | 1     |
+
+### Time Breakdown:
+
+| Stage            | Time (sec) |
+| ---------------- | ---------- |
+| Frame extraction | 14.20      |
+| Blur detection   | 22.61      |
+| Deduplication    | 15.22      |
+| YOLOv8 detection | 15.33      |
+
+## 🚀 Improvements for Production
+
+📁 See [Production Readiness Plan](./PRODUCTION_SPEC.md) for infrastructure and scaling strategy.
