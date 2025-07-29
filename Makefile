@@ -11,6 +11,7 @@ help:
 	@echo "  make lint-check     - Run ruff/black formatting checks"
 	@echo "  make lint-fix       - Run ruff/black formatting fixes"
 	@echo "  make clean          - Remove build artifacts and output"
+	@echo "  make build		     - Build the Docker image for the dataset pipeline"
 	@echo "  make docker-run     - Run pipeline locally in Docker (CPU only)"
 	@echo "  make precommit      - Run all pre-commit hooks"
 	@echo "  make run            - Run the pipeline with default parameters"
