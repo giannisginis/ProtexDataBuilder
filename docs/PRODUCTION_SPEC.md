@@ -48,9 +48,7 @@ This document outlines improvements and infrastructure design recommendations to
 - **Runtime validation and retries:**
   Use retry logic for transient failures (e.g., model timeouts, S3 write failures).
 
-Great idea! Proposing improvements to the CLI structure shows maturity in both usability and maintainability. Here's what we can mention under **CLI Enhancements** or as part of the **Production Improvements** section of your report:
-
-### 🧵 CLI Modularization & Packaging (Proposed Improvement)
+### 🧵 CLI Modularization & Packaging
 
 - **Make pipeline stages into subcommands as well:**
   Break down the `run` command into separate Typer subcommands:

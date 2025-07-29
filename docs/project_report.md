@@ -50,6 +50,8 @@ This pipeline processes timelapse videos into high-quality, pre-tagged image dat
 | Deduplication    | 15.22      |
 | YOLOv8 detection | 15.33      |
 
+[Comet-ML experiment Dashboard](https://www.comet.com/ioannisgkinis/protex-ai/1992a70f9e6d46deb7daee8df48c537b?compareXAxis=step&experiment-tab=panels&prevPath=%2Fioannisgkinis%2Fprotex-ai%2Fview%2Fnew%2Fpanels&showOutliers=true&smoothing=0&xAxis=step)
+
 ## 🚀 Improvements for Production
 
 📁 See [Production Readiness Plan](./PRODUCTION_SPEC.md) for infrastructure and scaling strategy.
