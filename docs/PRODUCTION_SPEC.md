@@ -72,6 +72,3 @@ Great idea! Proposing improvements to the CLI structure shows maturity in both u
   pip install protex-pipeline
   protex-pipeline run --video ...
   ```
-
-- **Interactive or dry-run mode:**
-  Add a `--dry-run` or `--interactive` flag to preview what the CLI will do without executing the steps (e.g., showing file counts, previewing model config).

@@ -50,7 +50,6 @@ data/
 # Images and videos (optional - if generated)
 *.jpg
 *.jpeg
-*.png
 *.mp4
 *.avi
 
